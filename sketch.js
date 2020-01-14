@@ -247,8 +247,8 @@ class Stella {
     translate(- windowWidth * 4,-windowHeight * 4, -3000)
     scale(10)
     stroke(this.color)
-    strokeWeight(1.5 + volume/200)
-    point(this.x + volume/800, this.y+ volume/800);
+    strokeWeight(1.5 + volume/200 + random(volume/450))
+    point(this.x, this.y);
     pop()
   }
 
