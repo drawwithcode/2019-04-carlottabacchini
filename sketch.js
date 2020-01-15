@@ -29,11 +29,10 @@ var stella = []; // stars
 
 // loading assets
 function preload() {
-  mySong = loadSound('assets/song.mp3')
-  myImage = loadImage('assets/bg.png')
-  myFont = loadFont('assets/NeonTubes2.otf')
+  mySong = loadSound("assets/song.mp3")
+  myImage = loadImage("assets/bg.png")
+  myFont = loadFont("assets/NeonTubes2.otf")
 }
-
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
@@ -42,13 +41,12 @@ function setup() {
   analyzer = new p5.Amplitude(); // perform measurements on the song and give back values
   analyzer.setInput(mySong);
 
-
   // create the button that allows to play the song
-  var buttonText = 'PLAY'
+  var buttonText = "PLAY"
   button = createButton(buttonText);
-  button.style('background-color', 'black');
+  button.style("background-color", "black");
   button.style("color", "rgb(252, 16, 145)");
-  button.style('cursor', 'pointer')
+  button.style("cursor", "pointer")
   button.style("font-size", "20px");
   button.style("width", "120px");
   button.style("font-family", "Montserrat");
@@ -64,11 +62,11 @@ function setup() {
     function() {
       if (mySong.isPlaying()) {
         mySong.stop();
-        button.html('PLAY')
+        button.html("PLAY")
         textShow = true;
       } else {
         mySong.play();
-        button.html('PAUSE')
+        button.html("PAUSE")
         textShow = false;
       }
     })
@@ -100,8 +98,8 @@ function setup() {
     }
   }
 
-  for (let i = 0; i < 1000; i++) {
-    stella[i] = new Stella(random(width), random(height), random(255)*10);
+  for (let i = 0; i < 1000; i++) { // 1000 = number of stars
+    stella[i] = new Stella(random(width), random(height), random(255) * 10); // random paramenter to make the stars look different
   }
 }
 
@@ -109,13 +107,12 @@ function draw() {
 
   // setting analyzer variables
   volume = analyzer.getLevel();
-  volume = map(volume, 0, 1, 0, height);
+  volume = map(volume, 0, 1, 0, height); // overwrite volume with mapped volume
 
-  // stars
+  // show stars
   for (let i = 0; i < stella.length; i++) {
-   stella[i].display();
- }
-
+    stella[i].display();
+  }
 
   // drawing terrain1
   flying1 -= 0.1;
@@ -126,7 +123,7 @@ function draw() {
     let xoff1 = 0;
 
     for (let x = 0; x < cols1; x++) {
-      terrain1[x][y] = map(noise(xoff1 * volume / 1000, yoff1 * volume / 1000), 0, 1, -50, 50);
+      terrain1[x][y] = map(noise(xoff1 * volume / 1000, yoff1 * volume / 1000), 0, 1, -50, 50); // use volume in the terrai in order to make it reactable
       xoff1 += 0.5;
     }
     yoff1 += 0.5;
@@ -141,14 +138,14 @@ function draw() {
     let xoff2 = 0;
 
     for (let x = 0; x < cols2; x++) {
-      terrain2[x][y] = map(noise(xoff2 * volume / 1300, yoff2 * volume / 1300), 0, 1, -130, 130);
+      terrain2[x][y] = map(noise(xoff2 * volume / 1300, yoff2 * volume / 1300), 0, 1, -130, 130); // use volume in the ground in order to make it reactable
       xoff2 += 1.3;
     }
     yoff2 += 1.3;
   }
 
 
-// background plane with texture
+  // background plane with texture
   push()
     translate(0, 0, -3200)
     ambientLight(60 * volume / volume, 60 * volume / volume, 60 * volume / volume);
@@ -158,96 +155,94 @@ function draw() {
     plane(10000, 10000)
   pop()
 
-// moon
+  // moon
   push()
     translate(0, +100, -3000)
     noStroke()
-    emissiveMaterial(volume, 16 * volume / volume, 254 * volume / volume);
+    emissiveMaterial(volume, 16 * volume / volume, 254 * volume / volume); // color the object around with an emissive material
     sphere(1500);
   pop()
 
-// text which disappear when music is playing
-if (textShow == true) {
-  push()
-   fill('#ff3eba');
-   textFont(myFont);
-   translate(-750,-130)
-   textSize(220);
-   rotateY(0)
-   rotateZ(0)
-   text('VAPORWAVE', 50, 50);
-  pop()
-  push()
-   fill('#ff3eba');
-   textFont(myFont);
-   translate(-400,-60)
-   textSize(40);
-   rotateY(0)
-   rotateZ(0)
-   text('A SOUND VISUALIZATION WITH P5.JS', 50, 50);
-  pop()
-}
+  // text  disappear when music is playing
+  if (textShow == true) {
+    push()
+      fill("#ff3eba");
+      textFont(myFont);
+      translate(-750, -130)
+      textSize(220);
+      rotateY(0)
+      rotateZ(0)
+      text("VAPORWAVE", 50, 50);
+      pop()
+      push()
+      fill("#ff3eba");
+      textFont(myFont);
+      translate(-400, -60)
+      textSize(40);
+      rotateY(0)
+      rotateZ(0)
+      text("A SOUND VISUALIZATION WITH P5.JS", 50, 50);
+    pop()
+  }
 
   // terrain 1
   push()
-  stroke(volume, 16 * volume / volume, 254 * volume / volume)
-  ambientMaterial(15, 9, 30)
-  strokeWeight(0.4);
-  translate(0, 50);
+    stroke(volume, 16 * volume / volume, 254 * volume / volume) // color depending on the volume, without the volume the color will be black
+    ambientMaterial(15, 9, 30)
+    strokeWeight(0.4);
+    translate(0, 50);
 
-  rotateX(PI / +2.3);
+    rotateX(PI / +2.3);
 
-  translate(-w1 / 2, -h1 / 2 + 700);
+    translate(-w1 / 2, -h1 / 2 + 700); // move the terrain to the correct position
 
-  for (let y = 0; y < rows1 - 1; y++) {
-    beginShape(TRIANGLE_STRIP);
-
-    for (let x = 0; x < cols1; x++) {
-      vertex(x * scl, y * scl, terrain1[x][y]);
-      vertex(x * scl, (y + 1) * scl, terrain1[x][y + 1]);
+    for (let y = 0; y < rows1 - 1; y++) {
+      beginShape(TRIANGLE_STRIP); // use triangle in order to make a smoother texture
+        for (let x = 0; x < cols1; x++) {
+          vertex(x * scl, y * scl, terrain1[x][y]);
+          vertex(x * scl, (y + 1) * scl, terrain1[x][y + 1]);
+        }
+      endShape();
     }
-    endShape();
-  }
   pop()
 
   // terrain 2
   push()
-  stroke(volume, 16 * volume / volume, 254 * volume / volume)
-  ambientMaterial(15, 9, 30)
-  strokeWeight(0.4);
-  translate(0, 50);
+    stroke(volume, 16 * volume / volume, 254 * volume / volume) // color depending on the volume, without the volume the color will be black
+    ambientMaterial(15, 9, 30)
+    strokeWeight(0.4);
+    translate(0, 50);
 
-  rotateX(PI / +2.7);
+    rotateX(PI / + 2.7);
 
-  translate(-w2 / 2, -h2 / 2 + 90);
+    translate( - w2 / 2, - h2 / 2 + 90); // move the terrain to the correct position
 
-  for (let y = 0; y < rows2 - 1; y++) {
-    beginShape(TRIANGLE_STRIP);
-
-    for (let x = 0; x < cols2; x++) {
-      vertex(x * scl, y * scl, terrain2[x][y]);
-      vertex(x * scl, (y + 1) * scl, terrain2[x][y + 1]);
+    for (let y = 0; y < rows2 - 1; y++) {
+      beginShape( TRIANGLE_STRIP );
+        for (let x = 0; x < cols2; x++) {
+          vertex( x * scl, y * scl, terrain2[x][y]);
+          vertex( x * scl, (y + 1) * scl, terrain2[x][y + 1] );
+        }
+      endShape();
     }
-    endShape();
-  }
   pop()
 
 }
 
-// stars array
+// stars array of the background
 class Stella {
-  constructor(xPos, yPos, color) {
+  constructor(xPos, yPos, color) { // set parameters for the stars
     this.x = xPos;
     this.y = yPos;
     this.color = color;
   }
 
-  display() {
+  display() { // display the stars
     push()
-    translate(- windowWidth * 4,-windowHeight * 4, -3000)
+    translate(-windowWidth * 4, -windowHeight * 4, -3000)
     scale(10)
     stroke(this.color)
-    strokeWeight(1.5 + volume/200 + random(volume/450))
+    strokeWeight(1.5 + volume / 200 + random(volume / 450))
     point(this.x, this.y);
     pop()
   }
